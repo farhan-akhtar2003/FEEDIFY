@@ -1,4 +1,7 @@
+//FEEDIFY>SERVER>CONTROLLERS>authController.js
 const User = require("../models/user");
+const Form = require("../models/form"); // Import the Form model
+const Submission = require("../models/submission"); // Import the Submission model
 const { comparePassword, hashPassword } = require("../helpers/auth");
 const jwt = require("jsonwebtoken");
 
@@ -93,14 +96,12 @@ const loginUser = async (req, res) => {
             return res.status(500).json({ error: "Internal Server Error" });
           }
           // Set JWT token in cookie
-          res
-            .cookie("token", token)
-            .json({
-              type: user.userType,
-              rollId: user.userId,
-              email: user.email,
-              id: user._id,
-            });
+          res.cookie("token", token).json({
+            type: user.userType,
+            rollId: user.userId,
+            email: user.email,
+            id: user._id,
+          });
         }
       );
     } else {
@@ -114,7 +115,7 @@ const loginUser = async (req, res) => {
   }
 };
 
-const logoutUser = async(req, res) => {
+const logoutUser = async (req, res) => {
   try {
     // Clear the token cookie
     res.clearCookie("token");
@@ -127,7 +128,7 @@ const logoutUser = async(req, res) => {
   }
 };
 
-const getProfile = async(req, res) => {
+const getProfile = async (req, res) => {
   const { token } = await req.cookies;
   if (token) {
     jwt.verify(token, process.env.JWT_SECRET, {}, (err, user) => {
@@ -142,4 +143,118 @@ const getProfile = async(req, res) => {
   }
 };
 
-module.exports = { test, registerUser, loginUser, getProfile,logoutUser };
+// Function to create a form
+const createForm = async (req, res) => {
+  try {
+    const { title, endMessage, expiration, fields, facultyId, accessibleTo } =
+      req.body;
+    const createdBy = req.user.id;
+
+    const form = new Form({
+      title,
+      endMessage,
+      expiration,
+      fields,
+      faculty: facultyId,
+      accessibleTo,
+      createdBy,
+    });
+
+    await form.save();
+
+    res.status(201).json({ message: "Form created successfully", form });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+// Function to fetch forms
+// Use Form.find() to fetch all forms from the database.
+const getForms = async (req, res) => {
+  try {
+    const forms = await Form.find();
+    res.json(forms);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+// Function to fetch a single form
+const getForm = async (req, res) => {
+  try {
+    const formId = req.params.formId;
+    const form = await Form.findById(formId);
+    if (!form) {
+      return res.status(404).json({ error: "Form not found" });
+    }
+    res.json(form);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
+// Function to delete a form
+const deleteForm = async (req, res) => {
+  try {
+    const formId = req.params.formId;
+    await Form.findByIdAndDelete(formId);
+    // Also delete associated submissions
+    await Submission.deleteMany({ form: formId });
+    res.json({ message: "Form deleted successfully" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
+// Function to submit a form
+const submitForm = async (req, res) => {
+  try {
+    const formId = req.params.formId;
+    const form = await Form.findById(formId);
+    if (!form) {
+      return res.status(404).json({ error: "Form not found" });
+    }
+    const submissionData = req.body;
+    const submission = new Submission({
+      form: formId,
+      data: submissionData,
+    });
+    await submission.save();
+    res.json(submission);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+// Function to fetch submissions for a form
+const getSubmissions = async (req, res) => {
+  try {
+    const formId = req.params.formId;
+    const submissions = await Submission.find({ form: formId });
+    res.json(submissions);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+module.exports = {
+  test,
+  registerUser,
+  loginUser,
+  getProfile,
+  logoutUser,
+  createForm,
+  getForms,
+  getForm,
+  deleteForm,
+  submitForm,
+  getSubmissions,
+};

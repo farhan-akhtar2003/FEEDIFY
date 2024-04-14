@@ -4,7 +4,7 @@ import RaterList from "./RaterList";
 
 const Ratereview = () => {
   return (
-    <section>
+    <section id="rates-and-reviews">
       <div className="container bg-n-3 relative py-10 z-2">
         <div className="hidden relative justify-center pt-[2rem] mb-[3rem] lg:flex">
           <img

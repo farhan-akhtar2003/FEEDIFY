@@ -3,7 +3,7 @@ import { insight } from "../constants";
 import { grid } from "../../public/assets";
 
 const Insights = () => (
-  <section>
+  <section id="Insights">
     <div className="container bg-n-4 pt-5 md:pb-10">
       <Heading tag="[ INSIGHTS ]" title="# OUR PROVIDING SERVICES #" />
 

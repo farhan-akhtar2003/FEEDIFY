@@ -6,7 +6,7 @@ import ClipPath from "../../public/assets/svg/ClipPath";
 
 const Teammates = () => {
   return (
-    <section>
+    <section id="Teammates">
       <div className="container bg-n-2 z-1 pt-10 pb-10 ">
         <Heading
           className="text-black underline md:max-w-md lg:max-w-2xl"

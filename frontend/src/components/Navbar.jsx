@@ -9,22 +9,23 @@ const Navbar = () => {
 
   const handleLogout = () => {
     setUser(null);
+    window.localStorage.clear();
     navigate("/");
     localStorage.removeItem("token");
   };
 
   return (
-    <nav className="bg-gray-800 py-4">
+    <nav className="bg-gray-800 py-4 fixed top-0 w-full z-50">
       <div className="container mx-auto flex justify-between items-center px-4">
-        <Link to="/" className="text-white font-semibold text-lg">
+        <a href="/" className="text-white font-semibold text-lg">
           Home
-        </Link>
+        </a>
         <div className="flex items-center">
           {!!user ? (
             <>
               <Link
                 to="/dashboard"
-                className="text-white mr-4  hover:text-gray-300"
+                className="text-white mr-4 hover:text-gray-300"
               >
                 {user.name}
               </Link>
@@ -37,6 +38,25 @@ const Navbar = () => {
             </>
           ) : (
             <>
+              {/* Add Insights, Teammates, and Rates and Reviews buttons */}
+              <a
+                href="#Insights"
+                className="text-white mx-4 hover:text-yellow-400"
+              >
+                Insights
+              </a>
+              <a
+                href="#rates-and-reviews"
+                className="text-white mx-4 hover:text-yellow-400"
+              >
+                Rates and Reviews
+              </a>
+              <a
+                href="#Teammates"
+                className="text-white mx-4 hover:text-yellow-400"
+              >
+                Teammates
+              </a>
               <Link
                 to="/register"
                 className="text-white mx-4 hover:text-yellow-400"
