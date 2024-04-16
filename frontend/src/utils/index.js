@@ -4,6 +4,7 @@ export const updateObjState = (setter, model, prop, val) => {
   _model[prop] = val;
   setter(_model);
 };
+
 export const updateArrOfObjState = (setter, model, index, prop, val) => {
   let _model = [...model];
   _model[index] = Object.assign({}, _model[index], { [prop]: val });

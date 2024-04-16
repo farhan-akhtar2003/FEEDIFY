@@ -4,83 +4,83 @@ import { useState, useEffect } from "react";
 import axios from "axios"; // Import Axios for HTTP requests
 
 // Signup function
-export const signup = async (email, pwd) => {
-  try {
-    // Make a POST request to your backend API endpoint for user registration
-    const response = await axios.post("/api/signup", { email, pwd });
-    return response.data; // Return the response from the server
-  } catch (error) {
-    throw error.response.data.error; // Throw an error if the request fails
-  }
-};
+// export const signup = async (email, pwd) => {
+//   try {
+//     // Make a POST request to your backend API endpoint for user registration
+//     const response = await axios.post("/api/signup", { email, pwd });
+//     return response.data; // Return the response from the server
+//   } catch (error) {
+//     throw error.response.data.error; // Throw an error if the request fails
+//   }
+// };
 
 // Login function
-export const login = async (email, pwd) => {
-  try {
-    // Make a POST request to your backend API endpoint for user login
-    const response = await axios.post("/api/login", { email, pwd });
-    return response.data; // Return the response from the server
-  } catch (error) {
-    throw error.response.data.error; // Throw an error if the request fails
-  }
-};
+// export const login = async (email, pwd) => {
+//   try {
+//     // Make a POST request to your backend API endpoint for user login
+//     const response = await axios.post("/api/login", { email, pwd });
+//     return response.data; // Return the response from the server
+//   } catch (error) {
+//     throw error.response.data.error; // Throw an error if the request fails
+//   }
+// };
 
 // Logout function
-export const logout = async () => {
-  try {
-    // Make a POST request to your backend API endpoint for user logout
-    await axios.post("/api/logout");
-    // Clear user data from local storage
-    localStorage.removeItem("token");
-  } catch (error) {
-    console.error("Logout error:", error);
-    throw error.response.data.error; // Throw an error if the request fails
-  }
-};
+// export const logout = async () => {
+//   try {
+//     // Make a POST request to your backend API endpoint for user logout
+//     await axios.post("/logout");
+//     // Clear user data from local storage
+//     localStorage.removeItem("token");
+//   } catch (error) {
+//     console.error("Logout error:", error);
+//     throw error.response.data.error; // Throw an error if the request fails
+//   }
+// };
 
 // Custom hook for user authentication
-export const useAuthenticated = () => {
-  const [user, setUser] = useState(null); // Initialize user state as null
+// export const useAuthenticated = () => {
+//   const [user, setUser] = useState(null); // Initialize user state as null
 
-  useEffect(() => {
-    // Fetch user data from the server when the component mounts
-    const fetchUser = async () => {
-      try {
-        const response = await axios.get("/api/profile");
-        setUser(response.data); // Set the user state with the response data
-      } catch (error) {
-        console.error("Fetch user error:", error);
-        setUser(null); // Set user state to null if there's an error
-      }
-    };
+//   useEffect(() => {
+//     // Fetch user data from the server when the component mounts
+//     const fetchUser = async () => {
+//       try {
+//         const response = await axios.get("/profile");
+//         setUser(response.data); // Set the user state with the response data
+//       } catch (error) {
+//         console.error("Fetch user error:", error);
+//         setUser(null); // Set user state to null if there's an error
+//       }
+//     };
 
-    fetchUser(); // Call the fetchUser function
-  }, []);
+//     fetchUser(); // Call the fetchUser function
+//   }, []);
 
-  return user; // Return the user state
-};
+//   return user; // Return the user state
+// };
 
 // Function to create a form
-export const createForm = async (formModel) => {
-  try {
-    // Make a POST request to your backend API endpoint to create a form
-    const response = await axios.post("/api/forms", formModel);
-    return response.data; // Return the response from the server
-  } catch (error) {
-    throw error.response.data.error; // Throw an error if the request fails
-  }
-};
+// export const createForm = async (formModel) => {
+//   try {
+//     // Make a POST request to your backend API endpoint to create a form
+//     const response = await axios.post("/api/forms", formModel);
+//     return response.data; // Return the response from the server
+//   } catch (error) {
+//     throw error.response.data.error; // Throw an error if the request fails
+//   }
+// };
 
 // Function to fetch forms
-export const getForms = async () => {
-  try {
-    // Make a GET request to your backend API endpoint to fetch forms
-    const response = await axios.get("/api/forms");
-    return response.data; // Return the response from the server
-  } catch (error) {
-    throw error.response.data.error; // Throw an error if the request fails
-  }
-};
+// export const getForms = async () => {
+//   try {
+//     // Make a GET request to your backend API endpoint to fetch forms
+//     const response = await axios.get("/forms");
+//     return response.data; // Return the response from the server
+//   } catch (error) {
+//     throw error.response.data.error; // Throw an error if the request fails
+//   }
+// };
 
 // Function to fetch a single form
 export const getForm = async (formId) => {

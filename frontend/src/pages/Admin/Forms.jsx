@@ -1,6 +1,5 @@
-//nfkwencdkwaeckmnwaqlk
 import { useState, useEffect } from "react";
-import { getForms } from "../../db";
+import axios from "axios";
 import FormCard from "../../components/Admin/FormCard";
 
 function Forms() {
@@ -9,23 +8,29 @@ function Forms() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!localStorage.getItem("token")) return;//////////////////
     const fetchData = async () => {
       try {
-        let frms = await getForms();
-
-        setForms(frms);
+        const response = await axios.get("/forms");
+        // console.log(response.data);
+        setForms(response.data.allForms); // allForms name comes from authController getForm
         setLoading(false);
-      } catch (e) {
+        // console.log("SETFORMS",forms);
+      } catch (error) {
         setLoading(false);
-        setMsg(e.message);
+        setMsg(error.message);
       }
     };
     fetchData();
   }, []);
 
+  useEffect(() => {
+    // console.log("SETFORMS", forms,forms&&forms.length); // Log the updated state here
+  }, [forms]);
+
+  console.log(forms);
+
   const onFormDelete = (id) => {
-    setForms(forms.filter((form) => form.id !== id));
+    setForms(forms.filter((forms) => forms.formId !== id));
   };
 
   return (
@@ -41,7 +46,7 @@ function Forms() {
         <div className="cards-container">
           {forms.length > 0 ? (
             forms.map((form) => (
-              <FormCard key={form.id} form={form} onDelete={onFormDelete} />
+              <FormCard key={form.formId} form={form} onDelete={onFormDelete} />
             ))
           ) : (
             <h3 className="msg mt-1">You haven't created any forms yet</h3>

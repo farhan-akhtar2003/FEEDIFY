@@ -1,36 +1,59 @@
-import React from "react";
-import { Route, Routes } from "react-router-dom";
+import React, { useContext, useEffect } from "react";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Toaster } from "react-hot-toast";
 import Navbar from "../src/components/Navbar";
-import Home from "../src/pages/Admin/Home";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
 import Footer from "./components/Footer";
 import Forms from "./pages/Admin/Forms";
 import Fill from "./pages/Admin/Fill";
 import Submissions from "./pages/Admin/Submissions";
 import Create from "./pages/Admin/Create";
+import Home from "../src/pages/Home";
+import { UserContext } from "../context/userContext";
+import AdminHome from "../src/pages/Admin/Home";
+import FacultyHome from "../src/pages/Faculty/Home";
+import StudentHome from "../src/pages/Student/Home";
 
 axios.defaults.baseURL = "http://localhost:8000";
 axios.defaults.withCredentials = true;
 
 function App() {
+  const { user } = useContext(UserContext);
+  const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   if (!user) {
+  //     // Redirect to home page if no user is logged in
+  //     navigate("/");
+  //   }
+  // }, [user, navigate]);
+
   return (
     <>
       <div className="App">
         <Navbar />
         <Toaster position="bottom-right" toastOptions={{ duration: 2000 }} />
         <Routes>
-          <Route exact path="/" element={<Home />} />
-          <Route path="/create" element={<Create/>} />
+          <Route path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/forms" element={<Forms/>} />
-          <Route path="/fill/:id" element={<Fill/>} />
-          <Route path="/submissions/:id" element={<Submissions/>} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/fill/:id" element={<Fill />} />
+          <Route path="/submissions/:id" element={<Submissions />} />
+          {user && user.user.userType === "Admin" && (
+            <>
+              <Route path="/adminhome" element={<AdminHome />} />
+              <Route path="/create" element={<Create />} />
+              <Route path="/forms" element={<Forms />} />
+            </>
+          )}
+          {user && user.user.userType === "Faculty" && (
+            <Route path="/facultyhome" element={<FacultyHome />} />
+          )}
+          {user && user.user.userType === "Student" && (
+            <Route path="/studenthome" element={<StudentHome />} />
+          )}
         </Routes>
         <Footer />
       </div>

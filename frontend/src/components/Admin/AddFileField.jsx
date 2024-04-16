@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { arrayToggle } from "../../utils";
+
 function AddFileField({ inputType, add, close }) {
   const [err, setErr] = useState("");
 

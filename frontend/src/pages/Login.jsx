@@ -12,33 +12,54 @@ const Login = () => {
     setData({ ...data, [input.name]: input.value });
   };
 
-  const loginUser = async (e) => {
-    e.preventDefault();
-    const { email, password } = data; // Extract email and password from data state
+   const loginUser = async (e) => {
+     e.preventDefault();
+     const { email, password } = data;
 
-    // Check if email belongs to nitj.ac.in domain
-    if (email.endsWith("@nitj.ac.in")) {
-      setError("");
-      console.log("Email domain verified. Signing in...");
-      // Perform sign-in process
-      try {
-        const response = await axios.post("/login", { email, password });
-        const responseData = response.data;
+     // Validate email and password
+     if (!email || !password) {
+       setError("Email and password are required.");
+       return;
+     }
 
-        if (responseData.error) {
-          toast.error(responseData.error);
-        } else {
-          setData({ email: "", password: "" }); // Reset the data state
-          toast.success("LOGGED IN SUCCESSFUL, WELCOME!");
-          navigate("/dashboard");
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    } else {
-      setError("Email must belong to nitj.ac.in domain.");
-    }
-  };
+     // Check if email belongs to nitj.ac.in domain
+     if (!email.endsWith("@nitj.ac.in")) {
+       setError("Email must belong to nitj.ac.in domain.");
+       return;
+     }
+
+     setError(""); // Clear any previous errors
+     try {
+       const response = await axios.post("/login", { email, password });
+       const responseData = response.data;
+
+       if (responseData.error) {
+         toast.error(responseData.error);
+       } else {
+         setData({ email: "", password: "" }); // Reset the form
+         toast.success("LOGGED IN SUCCESSFULLY, WELCOME!");
+         // Redirect based on userType or default route
+         const userType = responseData.user.userType;
+         switch (userType) {
+           case "Admin":
+             navigate("/adminhome");
+             break;
+           case "Faculty":
+             navigate("/facultyhome");
+             break;
+           case "Student":
+             navigate("/studenthome");
+             break;
+           default:
+             navigate("/"); // Default route
+             break;
+         }
+       }
+     } catch (error) {
+       toast.error("An error occurred while logging in.");
+       console.error("Login error:", error);
+     }
+   };
 
   return (
     <div className="flex items-center justify-center h-screen bg-white bg-[radial-gradient(#e5e7eb_3px,transparent_1px)] [background-size:36px_36px] overflow-y-auto">

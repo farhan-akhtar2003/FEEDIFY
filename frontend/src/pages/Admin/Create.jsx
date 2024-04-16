@@ -2,13 +2,17 @@ import { useState } from "react";
 import AddFieldModal from "../../components/Admin/AddFieldModal";
 import RenderPlainForm from "../../components/Admin/RenderPlainForm";
 import { updateObjState } from "../../utils";
-import { createForm as saveForm } from "../../db";
+// import { createForm as saveForm } from "../../db";
+import axios from "axios";
+import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 function Create() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [inputType, setInputType] = useState("text");
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate(); // Initialize useNavigate hook
 
   const openAddModal = (inputType) => {
     setShowAddModal(true);
@@ -16,21 +20,27 @@ function Create() {
   };
 
   const [formModel, setFormModel] = useState({
+    formId: "",
     title: "",
-    createdAt: +new Date(),
-    fields: [
-      {
-        title: "Enter your email",
-        type: "short-text",
-        required: true,
-      },
-    ],
     endMessage: "",
     expiration: "",
+    fields: [
+      // {
+      //   questionId: "", // Start questionId from 1
+      //   title: "",
+      //   type: "",
+      //   required: true,
+      // },
+    ],
+    // faculty:"",
+    // accessibleTo:[""],
+    createdAt: +new Date(),
   });
 
   const addFieldToFormModel = (field) => {
     let _model = { ...formModel }; // Using spread operator for shallow copy
+    // Assign a questionId based on the count of fields
+    // field.questionId = formModel.fields.length + 1;
     _model.fields.push(field);
     setFormModel(_model);
   };
@@ -44,7 +54,8 @@ function Create() {
     "file",
   ];
 
-  const createForm = async () => {
+  const createForm = async (e) => {
+    e.preventDefault();
     if (loading) return;
     setErr("");
 
@@ -55,18 +66,54 @@ function Create() {
     if (formModel.expiration.trim() && formModel.expiration < 1)
       return setErr("Validity should be at least an hour");
 
-    if (formModel.fields.length < 2)
+    if (formModel.fields.length < 1)
       return setErr("You need to add at least one field");
 
     setLoading(true);
+    const { title, endMessage, expiration, fields, createdAt } = formModel;
     try {
-      await saveForm(formModel);
+      const response = await axios.post("/createForms", {
+        title,
+        endMessage,
+        expiration,
+        fields,
+        // faculty,
+        // accessibleTo,
+        createdAt,
+      });
+      const { data } = response; // Destructure the response object to extract data
+
+      if (data.error) {
+        toast.error(data.error);
+      } else {
+        setFormModel({
+          formId: "", // Reset formId after successful creation
+          title: "",
+          endMessage: "",
+          expiration: "",
+          fields: [
+            // {
+            //   questionId: "",
+            //   title: "",
+            //   type: "",
+            //   required: true,
+            // },
+          ],
+          // faculty: "",
+          // accessibleTo: "",
+          createdAt: "",
+        });
+        toast.success("Form created Successfully!!!");
+        setLoading(false);
+        // Redirect to the desired route after form creation
+        //window.location.href = "/forms";
+        navigate("/forms");
+      }
+    } catch (error) {
+      setErr(error.message);
       setLoading(false);
-      // Redirect to the desired route after form creation
-      window.location.href = "/forms";
-    } catch (e) {
-      setErr(e.message);
-      setLoading(false);
+      console.log(error);
+      toast.error("Internal Server Error. Please try again later.");
     }
   };
 
@@ -131,21 +178,28 @@ function Create() {
 
         {err && <p className="text-red-500">{err}</p>}
 
-        <button
-          className="btn py-2 px-4 bg-n-4 text-black rounded hover:bg-green-600"
-          onClick={createForm}
-        >
-          {loading ? "Creating Form..." : "Create Form"}
-        </button>
+        <div className="flex justify-center">
+          <button
+            className="btn py-2 px-4 bg-n-4 text-black rounded hover:bg-green-600"
+            onClick={createForm}
+          >
+            {loading ? "Creating Form..." : "Create Form"}
+          </button>
+        </div>
       </div>
 
       <div className="flex flex-col items-center">
         <div className="rounded mt-6 bg-n-3 py-10 mb-5">
-          <p className="text-3xl pl-5 mb-1 text-black">Add new field</p>
+          <p className="text-3xl pl-5 my-0.5 bg-n-2 text-black">
+            Add new Questions:
+          </p>
+          <p className="text-1.5xl  pl-5 mb-0.5 text-black">
+            Select the question fields:
+          </p>
           <div className="grid grid-cols-2 py-4 bg-n-2 md:grid-cols-3 lg:grid-cols-3 gap-2 px-4">
             {inputTypes.map((inputType, index) => (
               <button
-                className="btn py-2 px-4 bg-n-4 text-gray-800 rounded hover:bg-blue-600"
+                className="btn py-2 px-4 bg-n-4 text-gray-800 rounded hover:bg-[#1d2951]"
                 key={index}
                 onClick={() => openAddModal(inputType)}
               >

@@ -124,15 +124,14 @@ const QuesChartsContainer = () => {
     setSelectedQuestion(questionId);
   };
 
-  return (
-    <div className="flex space-x-4">
-      <QuestionList
-        questions={DummyData}
-        onQuestionClick={handleQuestionClick}
-      />
-      <QuesCharts selectedQuestion={selectedQuestion} data={DummyData} />
-    </div>
-  );
-};
+return (
+  <div className="flex space-x-4 bg-n-8 border border-gray-200 rounded p-4">
+    <QuestionList
+      questions={DummyData}
+      onQuestionClick={handleQuestionClick}
+    />
+    <QuesCharts selectedQuestion={selectedQuestion} data={DummyData} />
+  </div>
+)};
 
 export default QuesChartsContainer;

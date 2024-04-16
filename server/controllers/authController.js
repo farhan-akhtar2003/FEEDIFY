@@ -21,13 +21,6 @@ const registerUser = async (req, res) => {
       });
     }
 
-    // // Check if password meets requirements
-    // if (password.length != 8) {
-    //   return res.json({
-    //     error: "Password should be 8 characters long",
-    //   });
-    // }
-
     // Check if email already exists
     const existEmail = await User.findOne({ email });
     if (existEmail) {
@@ -115,18 +108,6 @@ const loginUser = async (req, res) => {
   }
 };
 
-const logoutUser = async (req, res) => {
-  try {
-    // Clear the token cookie
-    res.clearCookie("token");
-
-    // Respond with success message
-    res.json({ message: "Logout successful" });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ error: "Internal Server Error" });
-  }
-};
 
 const getProfile = async (req, res) => {
   const { token } = await req.cookies;
@@ -136,45 +117,76 @@ const getProfile = async (req, res) => {
         console.log(err);
         return res.status(500).json({ error: "Internal Server Error" });
       }
-      res.json(user);
+      // Include userType in the response
+      res.json({user});
     });
   } else {
     res.json(null);
   }
 };
 
+const logoutUser = async (req, res) => {
+  try {
+    // Clear the token cookie
+    await res.clearCookie("token");
+
+    // Respond with success message
+    res.json({ message: "Logout successful" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 // Function to create a form
 const createForm = async (req, res) => {
   try {
-    const { title, endMessage, expiration, fields, facultyId, accessibleTo } =
-      req.body;
-    const createdBy = req.user.id;
-
-    const form = new Form({
+    const {
+      formId,
       title,
       endMessage,
       expiration,
       fields,
-      faculty: facultyId,
-      accessibleTo,
-      createdBy,
+      //  faculty,
+      //  accessibleTo,
+      createdAt,
+    } = req.body;
+
+    const form = await Form.create({
+      formId, // Include formId in the creation
+      title,
+      endMessage,
+      expiration,
+      fields,
+      // faculty,
+      // accessibleTo,
+      createdAt,
     });
-
-    await form.save();
-
+console.log(form);
     res.status(201).json({ message: "Form created successfully", form });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Internal Server Error" });
+    // Check if the error is a duplicate key error (E11000)
+    if (err.code === 11000) {
+      res.status(400).json({ error: "Duplicate formId detected" });
+    } else {
+      res.status(500).json({ error: "Internal Server Error" });
+    }
   }
 };
+
 
 // Function to fetch forms
 // Use Form.find() to fetch all forms from the database.
 const getForms = async (req, res) => {
+  console.log("nxsnxnsxsnaz");
   try {
-    const forms = await Form.find();
-    res.json(forms);
+    const allForms = await Form.find();
+    // console.log(allForms);
+    // Send the response with the newly created form and all forms
+    res
+      .status(201)
+      .json({ message: "Form created successfully", allForms });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: "Internal Server Error" });
@@ -184,14 +196,14 @@ const getForms = async (req, res) => {
 // Function to fetch a single form
 const getForm = async (req, res) => {
   try {
-    const formId = req.params.formId;
-    const form = await Form.findById(formId);
+    const { formId } = req.params; // Assuming formId is passed as a URL parameter
+    const form = await Form.findOne({ formId });
     if (!form) {
       return res.status(404).json({ error: "Form not found" });
     }
     res.json(form);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };

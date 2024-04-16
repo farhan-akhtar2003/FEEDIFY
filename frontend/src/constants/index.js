@@ -112,7 +112,7 @@ export const members = [
   {
     id: "0",
     title: "Vedant Taak",
-    roll: "21103115",
+    roll: "21103160",
     text: "vedanttak@nitj.ac.in",
     backgroundUrl: "./src/assets/benefits/card-1.svg",
     iconUrl: mem,
@@ -130,7 +130,7 @@ export const members = [
   {
     id: "2",
     title: "Unnati Sacchan",
-    roll: "21103178",
+    roll: "21103158",
     text: "unnatisacchan@nitj.ac.in",
     backgroundUrl: "./src/assets/benefits/card-3.svg",
     iconUrl: mem,
@@ -139,7 +139,7 @@ export const members = [
   {
     id: "3",
     title: "Vidyanand Kumar",
-    roll: "21103165",
+    roll: "21103162",
     text: "vidyanandkumar@nitj.ac.in",
     backgroundUrl: "./src/assets/benefits/card-4.svg",
     iconUrl: mem,

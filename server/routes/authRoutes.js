@@ -19,7 +19,7 @@ const {
 router.use(
   cors({
     credentials: true,
-    origin: "http://localhost:5173",
+    origin: "http://localhost:5173",// NEED CHANGES 
   })
 );
 
@@ -31,7 +31,7 @@ router.get("/profile", getProfile);
 router.post("/logout", logoutUser);
 
 // Form routes
-router.post("/forms", createForm); // Route for creating a form
+router.post("/createForms", createForm); // Route for creating a form
 router.get("/forms", getForms); // Route for fetching all forms
 router.get("/forms/:formId", getForm); // Route for fetching a single form
 router.delete("/forms/:formId", deleteForm); // Route for deleting a form
