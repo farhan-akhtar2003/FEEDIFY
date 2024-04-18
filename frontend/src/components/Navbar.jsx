@@ -27,7 +27,7 @@ function Navbar() {
       }
     }
   }, [user, location, navigate]);
-
+// console.log(user.user.id);
   const handleLogout = async () => {
     try {
       await axios.post("/logout");
@@ -60,10 +60,13 @@ function Navbar() {
   };
 
   return (
-    <nav className="bg-gray-800 py-4 fixed top-0 w-full z-50">
+    <nav className="bg-gray-800 py-4 fixed top-0 w-full z-50 mb-30rem">
       <div className="container mx-auto flex justify-between items-center px-4">
         <Link to="/" className="flex items-center">
           <img src={logo} alt="Logo" className=" h-8 mr-2" />
+        </Link>
+        <Link to="/forms" className="flex items-center">
+          ALL FORMS
         </Link>
         <div className="flex items-center">
           {user ? (

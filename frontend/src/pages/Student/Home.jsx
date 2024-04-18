@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
 import Banner from "../../components/Student/Banner";
+import Forms from "../../components/Student/Forms";
 
 function Home() {
   return (
@@ -7,7 +7,7 @@ function Home() {
       <div className=" pt-[1rem] lg:pt-[2rem] overflow-hidden">
         {/* <Navbar/> */}
         <Banner />
-
+        <Forms />
       </div>
     </>
   );

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import FormCard from "../../components/Admin/FormCard";
+import FormCard from "../../components/Student/FormCard";
 
 function Forms() {
   const [forms, setForms] = useState([]);
@@ -26,18 +26,12 @@ function Forms() {
   useEffect(() => {
     // console.log("SETFORMS", forms,forms&&forms.length); // Log the updated state here
   }, [forms]);
-
   //console.log(forms);
-
-  const onFormDelete = (id) => {
-    setForms(forms.filter((forms) => forms.formId !== id));
-  };
 
   return (
     <div>
-      <h1 className="heading text-gray-800 mt-5 text-center pt-15">
-        All Forms
-      </h1>
+      <h1 className="heading text-gray-800 mt-5 text-center">All Forms</h1>
+
       {loading ? (
         <p className="text-center mt-1">
           <span className="spinner"></span>
@@ -47,9 +41,7 @@ function Forms() {
       ) : (
         <div className="cards-container">
           {forms.length > 0 ? (
-            forms.map((form) => (
-              <FormCard key={form.formId} form={form} onDelete={onFormDelete} />
-            ))
+            forms.map((form) => <FormCard key={form.formId} form={form} />)
           ) : (
             <h3 className="msg mt-1">You haven't created any forms yet</h3>
           )}

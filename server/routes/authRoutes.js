@@ -12,7 +12,9 @@ const {
   getForm,
   deleteForm,
   submitForm,
-  getSubmissions,
+  getOnesubmissions,
+  getAllsubmissions,
+  getAllcounts,
 } = require("../controllers/authController");
 
 // Middleware for CORS
@@ -33,9 +35,16 @@ router.post("/logout", logoutUser);
 // Form routes
 router.post("/createForms", createForm); // Route for creating a form
 router.get("/forms", getForms); // Route for fetching all forms
-router.get("/forms/:formId", getForm); // Route for fetching a single form
+router.get("/forms/fill/:formId", getForm); // Route for fetching a single form
+
 router.delete("/forms/:formId", deleteForm); // Route for deleting a form
-router.post("/forms/:formId/submissions", submitForm); // Route for submitting a form
-router.get("/forms/submissions", getSubmissions); // Route for fetching submissions
+router.post("/forms/fill/:formId/submissions", submitForm); // Route for submitting a form
+
+router.get("/forms/submissions/:formId", getOnesubmissions);
+
+router.get("/forms/submission/:formId",getAllsubmissions);
+
+//for analysis
+router.get("/forms/analysis/:formId", getAllcounts);
 
 module.exports = router;

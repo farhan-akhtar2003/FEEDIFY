@@ -19,7 +19,7 @@ export function UserContextProvider({ children }) {
 
   useEffect(() => {
     const fetchUserProfile = async () => {
-      console.log("useeffect");
+      //console.log("useeffect");
       try {
         const response = await axios.get("/profile");
         console.log("pageuseContext", response.data);
@@ -34,7 +34,7 @@ export function UserContextProvider({ children }) {
     // Cleanup function
     return () => {
       // Perform cleanup logic here
-      console.log("Component unmounted");
+      // console.log("Component unmounted");
       // For example, you can unsubscribe from event listeners or clear timers
     };
     

@@ -83,15 +83,15 @@ import axios from "axios"; // Import Axios for HTTP requests
 // };
 
 // Function to fetch a single form
-export const getForm = async (formId) => {
-  try {
-    // Make a GET request to your backend API endpoint to fetch a single form
-    const response = await axios.get(`/api/forms/${formId}`);
-    return response.data; // Return the response from the server
-  } catch (error) {
-    throw error.response.data.error; // Throw an error if the request fails
-  }
-};
+// export const getForm = async (formId) => {
+//   try {
+//     // Make a GET request to your backend API endpoint to fetch a single form
+//     const response = await axios.get(`/api/forms/${formId}`);
+//     return response.data; // Return the response from the server
+//   } catch (error) {
+//     throw error.response.data.error; // Throw an error if the request fails
+//   }
+// };
 
 // Function to delete a form
 export const deleteForm = async (formId) => {
@@ -122,18 +122,18 @@ export const uploadFile = async (file, fileName) => {
 };
 
 // Function to submit a form
-export const submitForm = async (submission, formId) => {
-  try {
-    // Make a POST request to your backend API endpoint to submit a form
-    const response = await axios.post(
-      `/api/forms/${formId}/submissions`,
-      submission
-    );
-    return response.data; // Return the response from the server
-  } catch (error) {
-    throw error.response.data.error; // Throw an error if the request fails
-  }
-};
+// export const submitForm = async (submission, formId) => {
+//   try {
+//     // Make a POST request to your backend API endpoint to submit a form
+//     const response = await axios.post(
+//       `/api/forms/${formId}/submissions`,
+//       submission
+//     );
+//     return response.data; // Return the response from the server
+//   } catch (error) {
+//     throw error.response.data.error; // Throw an error if the request fails
+//   }
+// };
 
 // Function to fetch submissions
 export const getSubmissions = async (opts) => {

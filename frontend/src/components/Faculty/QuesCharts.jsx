@@ -1,3 +1,4 @@
+// QuesCharts.jsx
 import React, { useEffect, useRef } from "react";
 import Chart from "chart.js/auto";
 
@@ -6,29 +7,33 @@ const QuesCharts = ({ selectedQuestion, data }) => {
   const chartInstanceRef = useRef(null);
 
   useEffect(() => {
+    //console.log("QuesCharts", data, selectedQuestion);
     if (chartInstanceRef.current) {
-      // Destroy the previous chart instance
-      chartInstanceRef.current.destroy();
+      chartInstanceRef.current.destroy(); // Destroy the previous chart instance
     }
 
     if (chartRef.current && selectedQuestion) {
       const selectedQuestionData = data.find(
-        (question) => question.id === selectedQuestion
+        (question) => question.quesTitle === selectedQuestion
       );
-
+      // console.log(
+      //   "selectedQuestionData",
+      //   selectedQuestionData,
+      //   selectedQuestion
+      // );
       if (selectedQuestionData) {
-        const { text, responses } = selectedQuestionData;
-        const numResponses = Object.keys(responses).length;
-
-        if (numResponses === 1) {
-          // For text field questions, render a message
-          chartRef.current.innerHTML = "Text field question";
-          return;
-        }
+        const { quesTitle, response } = selectedQuestionData;
+        const numResponses = Object.keys(response).length;
+        console.log("numResponses", numResponses);
+        // if (numResponses === 1) {
+        //   // For text field questions, render a message
+        //   chartRef.current.innerHTML = "Text field question";
+        //   return;
+        // }
 
         let chartType = "bar";
         let chartData = {
-          labels: Object.keys(responses),
+          labels: Object.keys(response),
           datasets: [
             {
               label: "Responses",
@@ -51,7 +56,7 @@ const QuesCharts = ({ selectedQuestion, data }) => {
                 "rgba(128,0,128, 1)",
               ],
               hoverBorderColor: "black",
-              data: Object.values(responses),
+              data: Object.values(response),
             },
           ],
         };

@@ -41,20 +41,20 @@ const formSchema = new mongoose.Schema({
         type: String,
         default: null,
       },
+      options: mongoose.Schema.Types.Mixed, // Allow for flexibility in storing options
       required: {
         type: Boolean,
         default: false,
       },
+      // options: [String], // Add an options field for multiple option questions
     },
   ],
   faculty: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User", // Reference to the faculty user
+    type: String,
     default: null, // Set default value to null
   },
   accessibleTo: {
-    type: [mongoose.Schema.Types.ObjectId], // Define as an array
-    ref: "User", // Reference to the user model for students
+    type: [String], // Define as an array of strings
     default: [], // Set default value to an empty array
   },
   createdAt: {
@@ -62,6 +62,10 @@ const formSchema = new mongoose.Schema({
     default: Date.now,
   },
 });
+
+
+formSchema.index({ formId: 1 });
+
 
 const Form = mongoose.model("Form", formSchema);
 

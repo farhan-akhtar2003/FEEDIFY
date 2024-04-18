@@ -2,7 +2,6 @@ import { useState } from "react";
 import AddFieldModal from "../../components/Admin/AddFieldModal";
 import RenderPlainForm from "../../components/Admin/RenderPlainForm";
 import { updateObjState } from "../../utils";
-// import { createForm as saveForm } from "../../db";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -12,7 +11,7 @@ function Create() {
   const [inputType, setInputType] = useState("text");
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate(); // Initialize useNavigate hook
+  const navigate = useNavigate();
 
   const openAddModal = (inputType) => {
     setShowAddModal(true);
@@ -24,14 +23,7 @@ function Create() {
     title: "",
     endMessage: "",
     expiration: "",
-    fields: [
-      // {
-      //   questionId: "", // Start questionId from 1
-      //   title: "",
-      //   type: "",
-      //   required: true,
-      // },
-    ],
+    fields: [],
     // faculty:"",
     // accessibleTo:[""],
     createdAt: +new Date(),
@@ -82,7 +74,7 @@ function Create() {
         createdAt,
       });
       const { data } = response; // Destructure the response object to extract data
-
+      //console.log("create",data);
       if (data.error) {
         toast.error(data.error);
       } else {
@@ -116,7 +108,7 @@ function Create() {
       toast.error("Internal Server Error. Please try again later.");
     }
   };
-
+  //console.log("FORMMODAL",formModel);
   return (
     <div className="container mx-auto bg-n-6 pt-10 pb-10">
       <h1 className="text-3xl text-black font-semibold pt-20 mb-6">

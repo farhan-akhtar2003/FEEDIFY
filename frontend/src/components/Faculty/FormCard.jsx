@@ -1,21 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { getDateFromMillis } from "../../utils";
-import { deleteForm } from "../../db";
-import RenderPlainForm from "../../components/Admin/RenderPlainForm";
-import deleteIcon from "../../../public/delete.png";
+import RenderPlainForm from "../../components/Faculty/RenderPlainForm";
 
 function FormCard({ form, onDelete }) {
   const [preview, setPreview] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  const handleDelete = async () => {
-    if (!window.confirm("Are you sure you want to delete this form?")) return;
-    setLoading(true);
-    await deleteForm(form.formId);
-    setLoading(false);
-    onDelete(form.formId);
-  };
 
   return (
     <div className="card  bg-n-2 shadow-md rounded-lg overflow-hidden border border-gray-200 hover:border-[#8e3a59] hover:border-width-20rem transition duration-300 group">
@@ -29,23 +18,13 @@ function FormCard({ form, onDelete }) {
             Preview
           </button>
           <Link
-            to={`/submission/${form.formId}`}
-            className="text-white bg-green-500 focus:outline-none rounded-lg p-2 transition duration-300  hover:bg-green-800 hover:text-white "
+            to={`/analysis/${form.formId}`}
+            className="text-white bg-[#ff2400] focus:outline-none rounded-lg p-2 transition duration-300  hover:bg-[#c90016] hover:text-white "
           >
-            Submissions
+            Analysis
           </Link>
-          <button
-            onClick={handleDelete}
-            className="text-white bg-n-2 focus:outline-none rounded-lg p-2 transition duration-300 hover:bg-n-6 hover:text-white relative group"
-          >
-            {loading ? (
-              <span className="spinner red"></span>
-            ) : (
-              <img src={deleteIcon} alt="Delete" className="w-6 h-6" />
-            )}
-          </button>
         </div>
-        <p className="text-gray-800 mt-2">
+        <p className="text-gray-800 pt-2 m-2">
           Created on: {getDateFromMillis(form.createdAt)}
         </p>
       </div>

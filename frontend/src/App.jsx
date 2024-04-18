@@ -5,16 +5,19 @@ import { Toaster } from "react-hot-toast";
 import Navbar from "../src/components/Navbar";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
-import Footer from "./components/Footer";
+import Footer from "../src/components/Footer";
 import Forms from "./pages/Admin/Forms";
-import Fill from "./pages/Admin/Fill";
-import Submissions from "./pages/Admin/Submissions";
-import Create from "./pages/Admin/Create";
+import Fill from "../src/pages/Student/Fill";
+import StudentSubmissions from "../src/pages/Student/Submissions";
+import AllSubmissions from "../src/pages/Admin/Submissions";
+import Create from "../src/pages/Admin/Create";
 import Home from "../src/pages/Home";
 import { UserContext } from "../context/userContext";
 import AdminHome from "../src/pages/Admin/Home";
 import FacultyHome from "../src/pages/Faculty/Home";
 import StudentHome from "../src/pages/Student/Home";
+import StudentForms from "./components/Student/Forms.jsx";
+import Analysis from "./pages/Faculty/Analysis.jsx";
 
 axios.defaults.baseURL = "http://localhost:8000";
 axios.defaults.withCredentials = true;
@@ -39,20 +42,27 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/fill/:id" element={<Fill />} />
-          <Route path="/submissions/:id" element={<Submissions />} />
           {user && user.user.userType === "Admin" && (
             <>
               <Route path="/adminhome" element={<AdminHome />} />
               <Route path="/create" element={<Create />} />
               <Route path="/forms" element={<Forms />} />
+              <Route path="/submission/:id" element={<AllSubmissions />} />
             </>
           )}
           {user && user.user.userType === "Faculty" && (
-            <Route path="/facultyhome" element={<FacultyHome />} />
+            <>
+              <Route path="/facultyhome" element={<FacultyHome />} />
+              <Route path="/analysis/:id" element={<Analysis />} />
+            </>
           )}
           {user && user.user.userType === "Student" && (
-            <Route path="/studenthome" element={<StudentHome />} />
+            <>
+              <Route path="/studenthome" element={<StudentHome />} />
+              <Route path="/forms" element={<StudentForms />} />
+              <Route path="/fill/:id" element={<Fill />} />
+              <Route path="/submissions/:id" element={<StudentSubmissions />} />
+            </>
           )}
         </Routes>
         <Footer />

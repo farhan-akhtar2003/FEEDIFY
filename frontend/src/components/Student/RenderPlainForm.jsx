@@ -1,13 +1,12 @@
 
 function RenderPlainForm({ model }) {
-  //console.log("RenderPlainForm", model);
   return (
     <div className="rounded-lg bg-gray-300 shadow-md p-6">
       <h1 className="text-2xl font-semibold text-gray-800 mb-4">
         Only for Preview purpose
       </h1>
       {model.fields.map((field, index) => (
-        <div key={index} className="mb-4">
+        <div key={index} className="mb-1">
           <label className="block text-gray-700 font-bold mb-1">
             Q{index + 1}: {field.title}
             {field.required && <span className="text-red-500">*</span>}
@@ -53,4 +52,3 @@ function RenderPlainForm({ model }) {
 }
 
 export default RenderPlainForm;
-

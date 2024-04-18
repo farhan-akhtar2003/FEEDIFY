@@ -32,14 +32,15 @@ const Login = () => {
      try {
        const response = await axios.post("/login", { email, password });
        const responseData = response.data;
+       //console.log(response.data); // Add this line
 
        if (responseData.error) {
          toast.error(responseData.error);
-       } else {
+       } else  {
          setData({ email: "", password: "" }); // Reset the form
-         toast.success("LOGGED IN SUCCESSFULLY, WELCOME!");
+         toast.success("LOGGED IN SUCCESSFULLY, RELOAD IF DASHBOARD NOT SHOWN");
          // Redirect based on userType or default route
-         const userType = responseData.user.userType;
+         const userType = responseData.type;
          switch (userType) {
            case "Admin":
              navigate("/adminhome");
@@ -56,9 +57,10 @@ const Login = () => {
          }
        }
      } catch (error) {
-       toast.error("An error occurred while logging in.");
+       //toast.error("An error occurred while logging in.");
        console.error("Login error:", error);
      }
+     
    };
 
   return (
