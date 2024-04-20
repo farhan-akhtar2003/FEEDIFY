@@ -65,8 +65,11 @@ function Navbar() {
         <Link to="/" className="flex items-center">
           <img src={logo} alt="Logo" className=" h-8 mr-2" />
         </Link>
+        {/* <Link to="/query" className="flex items-center">
+          hugging face
+        </Link> */}
         <Link to="/forms" className="flex items-center">
-          ALL FORMS
+          All Forms
         </Link>
         <div className="flex items-center">
           {user ? (

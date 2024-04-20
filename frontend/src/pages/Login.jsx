@@ -12,56 +12,56 @@ const Login = () => {
     setData({ ...data, [input.name]: input.value });
   };
 
-   const loginUser = async (e) => {
-     e.preventDefault();
-     const { email, password } = data;
+  const loginUser = async (e) => {
+    e.preventDefault();
+    const { email, password } = data;
 
-     // Validate email and password
-     if (!email || !password) {
-       setError("Email and password are required.");
-       return;
-     }
+    // Validate email and password
+    if (!email || !password) {
+      setError("Email and password are required.");
+      return;
+    }
 
-     // Check if email belongs to nitj.ac.in domain
-     if (!email.endsWith("@nitj.ac.in")) {
-       setError("Email must belong to nitj.ac.in domain.");
-       return;
-     }
+    // Check if email belongs to nitj.ac.in domain
+    if (!email.endsWith("@nitj.ac.in")) {
+      setError("Email must belong to nitj.ac.in domain.");
+      return;
+    }
 
-     setError(""); // Clear any previous errors
-     try {
-       const response = await axios.post("/login", { email, password });
-       const responseData = response.data;
-       //console.log(response.data); // Add this line
+    setError(""); // Clear any previous errors
+    try {
+      const response = await axios.post("/login", { email, password });
+      const responseData = response.data;
+      //console.log(response.data); // Add this line
 
-       if (responseData.error) {
-         toast.error(responseData.error);
-       } else  {
-         setData({ email: "", password: "" }); // Reset the form
-         toast.success("LOGGED IN SUCCESSFULLY, RELOAD IF DASHBOARD NOT SHOWN");
-         // Redirect based on userType or default route
-         const userType = responseData.type;
-         switch (userType) {
-           case "Admin":
-             navigate("/adminhome");
-             break;
-           case "Faculty":
-             navigate("/facultyhome");
-             break;
-           case "Student":
-             navigate("/studenthome");
-             break;
-           default:
-             navigate("/"); // Default route
-             break;
-         }
-       }
-     } catch (error) {
-       //toast.error("An error occurred while logging in.");
-       console.error("Login error:", error);
-     }
-     
-   };
+      if (responseData.error) {
+        toast.error(responseData.error);
+      } else {
+        setData({ email: "", password: "" }); // Reset the form
+        toast.success("LOGGED IN SUCCESSFULLY !!!");
+        toast.success("RELOAD IF DASHBOARD NOT SHOWN");
+        // Redirect based on userType or default route
+        const userType = responseData.type;
+        switch (userType) {
+          case "Admin":
+            navigate("/adminhome");
+            break;
+          case "Faculty":
+            navigate("/facultyhome");
+            break;
+          case "Student":
+            navigate("/studenthome");
+            break;
+          default:
+            navigate("/"); // Default route
+            break;
+        }
+      }
+    } catch (error) {
+      //toast.error("An error occurred while logging in.");
+      console.error("Login error:", error);
+    }
+  };
 
   return (
     <div className="flex items-center justify-center h-screen bg-white bg-[radial-gradient(#e5e7eb_3px,transparent_1px)] [background-size:36px_36px] overflow-y-auto">

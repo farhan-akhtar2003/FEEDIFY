@@ -3,10 +3,10 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import QuesChartsContainer from "../../components/Faculty/QuesChartsContainer";
 import axios from "axios";
+import TextQuesContainer from "../../components/Faculty/TextQuesContainer";
 
 function Analysis() {
   const [loading, setLoading] = useState(true);
-  const [msg, setMsg] = useState("");
   const [allanswer, setAllanswer] = useState([]);
   const [isMounted, setIsMounted] = useState(true); // Add a state variable to track mounted state
   const { id } = useParams();
@@ -24,7 +24,6 @@ function Analysis() {
         }
       } catch (e) {
         setLoading(false);
-        setMsg(e.message);
       }
     };
 
@@ -40,9 +39,10 @@ function Analysis() {
 
   return (
     <>
-      <div className=" pt-[1rem] lg:pt-[2rem] overflow-hidden">
+      <div className=" pt-[1rem] lg:pt-[3rem] overflow-hidden">
         {/* Pass the allanswer state to the QuesChartsContainer */}
         <QuesChartsContainer allanswer={allanswer} />
+        <TextQuesContainer allanswer={allanswer}/>
       </div>
     </>
   );

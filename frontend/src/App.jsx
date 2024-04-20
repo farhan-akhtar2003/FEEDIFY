@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Toaster } from "react-hot-toast";
@@ -18,6 +18,7 @@ import FacultyHome from "../src/pages/Faculty/Home";
 import StudentHome from "../src/pages/Student/Home";
 import StudentForms from "./components/Student/Forms.jsx";
 import Analysis from "./pages/Faculty/Analysis.jsx";
+import HuggingFaceComponent from "./pages/hugg.jsx";
 
 axios.defaults.baseURL = "http://localhost:8000";
 axios.defaults.withCredentials = true;
@@ -26,20 +27,14 @@ function App() {
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   if (!user) {
-  //     // Redirect to home page if no user is logged in
-  //     navigate("/");
-  //   }
-  // }, [user, navigate]);
-
   return (
     <>
       <div className="App">
         <Navbar />
-        <Toaster position="bottom-right" toastOptions={{ duration: 2000 }} />
+        <Toaster position="top-center" toastOptions={{ duration: 2000 }} />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/query" element={<HuggingFaceComponent/>}/>
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           {user && user.user.userType === "Admin" && (

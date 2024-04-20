@@ -24,12 +24,7 @@ const QuesCharts = ({ selectedQuestion, data }) => {
       if (selectedQuestionData) {
         const { quesTitle, response } = selectedQuestionData;
         const numResponses = Object.keys(response).length;
-        console.log("numResponses", numResponses);
-        // if (numResponses === 1) {
-        //   // For text field questions, render a message
-        //   chartRef.current.innerHTML = "Text field question";
-        //   return;
-        // }
+       // console.log("numResponses", numResponses);
 
         let chartType = "bar";
         let chartData = {
@@ -70,7 +65,7 @@ const QuesCharts = ({ selectedQuestion, data }) => {
         }
 
         const chartOptions = {
-          indexAxis: "y",
+          indexAxis: "x",
           scales: {
             y: {
               beginAtZero: true,
@@ -111,7 +106,7 @@ const QuesCharts = ({ selectedQuestion, data }) => {
   }, [selectedQuestion, data]);
 
   return (
-    <div className="w-1/2 p-4 bg-n-6 rounded-r-xl">
+    <div className="w-1/2  p-4 bg-[#f8f8ff] rounded">
       <canvas
         ref={chartRef}
         style={{ backgroundColor: "transparent" }}

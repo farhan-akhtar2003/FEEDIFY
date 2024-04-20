@@ -4,6 +4,7 @@ const Form = require("../models/form"); // Import the Form model
 const Submission = require("../models/submission"); // Import the Submission model
 const { comparePassword, hashPassword } = require("../helpers/auth");
 const jwt = require("jsonwebtoken");
+//const fetch = await import("node-fetch");
 
 const test = (req, res) => {
   res.json("test is working");
@@ -108,7 +109,6 @@ const loginUser = async (req, res) => {
   }
 };
 
-
 const getProfile = async (req, res) => {
   const { token } = await req.cookies;
   if (token) {
@@ -118,7 +118,7 @@ const getProfile = async (req, res) => {
         return res.status(500).json({ error: "Internal Server Error" });
       }
       // Include userType in the response
-      res.json({user});
+      res.json({ user });
     });
   } else {
     res.json(null);
@@ -162,7 +162,7 @@ const createForm = async (req, res) => {
       // accessibleTo,
       createdAt,
     });
-//console.log(form);
+    //console.log(form);
     res.status(201).json({ message: "Form created successfully", form });
   } catch (err) {
     console.error(err);
@@ -175,7 +175,6 @@ const createForm = async (req, res) => {
   }
 };
 
-
 // Function to fetch forms
 // Use Form.find() to fetch all forms from the database.
 const getForms = async (req, res) => {
@@ -183,10 +182,13 @@ const getForms = async (req, res) => {
   try {
     const allForms = await Form.find();
     // console.log(allForms);
+    const reversedForms = allForms.reverse();
+
     // Send the response with the newly created form and all forms
-    res
-      .status(201)
-      .json({ message: "Form created successfully", allForms });
+    res.status(200).json({
+      message: "Forms retrieved successfully",
+      allForms: reversedForms,
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: "Internal Server Error" });
@@ -209,21 +211,28 @@ const getForm = async (req, res) => {
   }
 };
 
-
+// Function to delete a form
 // Function to delete a form
 const deleteForm = async (req, res) => {
   try {
-    const formId = req.params;
-    await Form.findByIdAndDelete(formId);
-    // Also delete associated submissions
-    await Submission.deleteMany({ form: formId });
-    res.json({ message: "Form deleted successfully" });
+    const formId = req.params.formId; // Accessing the formId parameter from the request
+
+    // Check if there are any submissions associated with the form
+    const submissions = await Submission.find({ formID: formId });
+    // If there are submissions, delete them first
+    if (submissions.length > 0) {
+      await Submission.deleteOne({ formID: formId });
+    }
+    // Then delete the form by its custom formId field
+    await Form.deleteOne({ formId: formId });
+    res.json({
+      message: "Form and associated submissions deleted successfully",
+    });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
 
 // Function to submit a form
 const submitForm = async (req, res) => {
@@ -232,7 +241,7 @@ const submitForm = async (req, res) => {
     const { submitableModel, formTitle, studentId } = req.body;
 
     // // Check if the form exists
-const form = await Form.findOne({ formId: formId });
+    const form = await Form.findOne({ formId: formId });
     if (!form) {
       return res.status(404).json({ error: "Form not found" });
     }
@@ -286,49 +295,44 @@ const form = await Form.findOne({ formId: formId });
   }
 };
 
-
-
-
 // Function to fetch submissions for a form
 const getOnesubmissions = async (req, res) => {
- try {
-   const { formId } = req.params;
-   const studentId  = req.query.studentID;
+  try {
+    const { formId } = req.params;
+    const studentId = req.query.studentID;
 
-   // Find submissions matching the provided formId and studentId
-   const submissions = await Submission.findOne({
-     formID: formId,
-     "responses.studentID": studentId,
-   });
+    // Find submissions matching the provided formId and studentId
+    const submissions = await Submission.findOne({
+      formID: formId,
+      "responses.studentID": studentId,
+    });
 
-//console.log("submissions", formId,studentId,submissions);
-   // If submissions are found, extract the relevant data
-   if (submissions) {
-     // Filter responses for the specified student ID
-     const studentResponses = submissions.responses.find(
-       (response) => response.studentID === studentId
-     );
+    //console.log("submissions", formId,studentId,submissions);
+    // If submissions are found, extract the relevant data
+    if (submissions) {
+      // Filter responses for the specified student ID
+      const studentResponses = submissions.responses.find(
+        (response) => response.studentID === studentId
+      );
 
-     // Extract answer details from the responses
-     const answerDetails = studentResponses.answers.map((answer) => ({
-       quesTitle: answer.quesTitle,
-       quesType: answer.quesType,
-       response: answer.response,
-     }));
+      // Extract answer details from the responses
+      const answerDetails = studentResponses.answers.map((answer) => ({
+        quesTitle: answer.quesTitle,
+        quesType: answer.quesType,
+        response: answer.response,
+      }));
 
-     // Send the extracted answer details as JSON response
-     res.json(answerDetails);
-   } else {
-     // If no submissions are found for the given criteria, return a 404 response
-     res.status(404).json({ error: "Submissions not found" });
-   }
- } catch (error) {
-   console.log(error);
-   res.status(500).json({ error: "Internal Server Error" });
- }
+      // Send the extracted answer details as JSON response
+      res.json(answerDetails);
+    } else {
+      // If no submissions are found for the given criteria, return a 404 response
+      res.status(404).json({ error: "Submissions not found" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 };
-
-
 
 // Function to get ALL multiple submissions for a form
 const getAllsubmissions = async (req, res) => {
@@ -340,7 +344,7 @@ const getAllsubmissions = async (req, res) => {
       formID: formId,
     });
 
-    console.log("getallsubmissions",submissions);
+    //console.log("getallsubmissions",submissions);
     // If submissions are found, extract the relevant data
     if (submissions) {
       // Extract all responses
@@ -368,10 +372,6 @@ const getAllsubmissions = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
-
-
-
 
 // Function to get ALL multiple submissions for analysis of form
 const getAllcounts = async (req, res) => {
@@ -425,7 +425,7 @@ const getAllcounts = async (req, res) => {
 
       // Prepare the final response array
       const finalResponse = Object.entries(accumulatedResponses).map(
-        ([quesTitle ,response]) => {
+        ([quesTitle, response]) => {
           return { quesTitle, response };
         }
       );
@@ -438,6 +438,32 @@ const getAllcounts = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
+//hugging face model
+const getNlp=async (req, res) => {
+  const { inputs } = req.body;
+  try {
+    const response = await fetch(
+      "https://api-inference.huggingface.co/models/facebook/bart-large-cnn",
+      {
+        headers: {
+          Authorization: "Bearer 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",// bearer token comes from hugging face
+          "Content-Type": "application/json", // Add content type header
+        },
+        method: "POST",
+        body: JSON.stringify({ inputs }),
+      }
+    );
+    // console.log("2");
+    const result = await response.json();
+    // console.log("3",result);
+    res.json(result);
+  } catch (error) {
+    console.error("Error:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
@@ -456,4 +482,5 @@ module.exports = {
   getOnesubmissions,
   getAllsubmissions,
   getAllcounts,
+  getNlp,
 };

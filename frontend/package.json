@@ -9,6 +9,7 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
+  "author": "farhan akhtar",
   "dependencies": {
     "axios": "^1.6.8",
     "chart.js": "^4.4.2",

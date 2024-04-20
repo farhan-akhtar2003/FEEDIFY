@@ -42,7 +42,10 @@ function FormCard({ form }) {
         </div>
       </div>
       {preview && (
-        <div className="modal fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+        <div
+          className="modal fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50"
+          onClick={() => setPreview(false)}
+        >
           <div className="modal-content bg-white rounded-lg overflow-hidden p-4">
             <span
               className="absolute top-1 right-3 cursor-pointer text-red-400 hover:text-red-600"

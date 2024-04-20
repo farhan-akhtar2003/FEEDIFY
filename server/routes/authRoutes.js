@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const cors = require("cors");
+
 const {
   test,
   registerUser,
@@ -15,6 +16,7 @@ const {
   getOnesubmissions,
   getAllsubmissions,
   getAllcounts,
+  getNlp,
 } = require("../controllers/authController");
 
 // Middleware for CORS
@@ -38,6 +40,7 @@ router.get("/forms", getForms); // Route for fetching all forms
 router.get("/forms/fill/:formId", getForm); // Route for fetching a single form
 
 router.delete("/forms/:formId", deleteForm); // Route for deleting a form
+
 router.post("/forms/fill/:formId/submissions", submitForm); // Route for submitting a form
 
 router.get("/forms/submissions/:formId", getOnesubmissions);
@@ -46,5 +49,8 @@ router.get("/forms/submission/:formId",getAllsubmissions);
 
 //for analysis
 router.get("/forms/analysis/:formId", getAllcounts);
+
+//for huggg
+router.post("/nlp", getNlp);
 
 module.exports = router;

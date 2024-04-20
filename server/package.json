@@ -6,7 +6,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon index.js"
   },
-  "author": "",
+  "author": "farhan akhtar",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
@@ -16,8 +16,12 @@
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.2.4",
+    "node-fetch": "^3.3.2",
     "nodemon": "^3.1.0"
   },
   "keywords": [],
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "@gradio/client": "^0.16.0"
+  }
 }

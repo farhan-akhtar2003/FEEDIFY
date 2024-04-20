@@ -11,16 +11,21 @@ const QuesChartsContainer = ({ allanswer }) => {
   };
 
   return (
-    <div className="flex space-x-4 bg-n-8 border border-gray-200 rounded p-4">
-      <QuestionList
-        questions={allanswer}
-        onQuestionClick={handleQuestionClick}
-      />
-      <QuesCharts
-        selectedQuestion={selectedQuestionTitle} // Pass the title instead of index
-        data={allanswer}
-      />
-    </div>
+    <>
+      <h2 className="text-lg font-bold text-gray-900 m-5 ">
+        Question List - MCQ Type :{" "}
+      </h2>
+      <div className="flex space-x-4 h-[35rem] mt-4 bg-n-8 border border-gray-200 rounded p-4">
+        <QuestionList
+          questions={allanswer}
+          onQuestionClick={handleQuestionClick}
+        />
+        <QuesCharts
+          selectedQuestion={selectedQuestionTitle} // Pass the title instead of index
+          data={allanswer}
+        />
+      </div>
+    </>
   );
 };
 

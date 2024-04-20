@@ -1,20 +1,28 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { getDateFromMillis } from "../../utils";
-import { deleteForm } from "../../db";
 import RenderPlainForm from "../../components/Admin/RenderPlainForm";
 import deleteIcon from "../../../public/delete.png";
+import axios from "axios";
+import { toast } from "react-hot-toast";
 
 function FormCard({ form, onDelete }) {
   const [preview, setPreview] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleDelete = async () => {
+  const handleDelete = async (formId) => {
     if (!window.confirm("Are you sure you want to delete this form?")) return;
     setLoading(true);
-    await deleteForm(form.formId);
-    setLoading(false);
-    onDelete(form.formId);
+    try {
+      const response = await axios.delete(`/forms/${formId}`);
+      console.log("delete",response.data);
+      setLoading(false);
+      onDelete(form.formId);
+      toast.success("Form Removed Successfully");
+      return response.data;
+    } catch (error) {
+      throw error.response.data.error;
+    }
   };
 
   return (
@@ -35,7 +43,7 @@ function FormCard({ form, onDelete }) {
             Submissions
           </Link>
           <button
-            onClick={handleDelete}
+            onClick={() => handleDelete(form.formId)}
             className="text-white bg-n-2 focus:outline-none rounded-lg p-2 transition duration-300 hover:bg-n-6 hover:text-white relative group"
           >
             {loading ? (
@@ -50,7 +58,10 @@ function FormCard({ form, onDelete }) {
         </p>
       </div>
       {preview && (
-        <div className="modal fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+        <div
+          className="modal fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50"
+          onClick={() => setPreview(false)}
+        >
           <div className="modal-content bg-white rounded-lg overflow-hidden p-4">
             <span
               className="absolute top-1 right-3 cursor-pointer text-red-400 hover:text-red-600"

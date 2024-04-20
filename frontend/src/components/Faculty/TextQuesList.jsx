@@ -1,19 +1,22 @@
 import React, { useState } from "react";
 
-const QuestionList = ({ questions, onQuestionClick }) => {
+const TextQuesList = ({ questions, onQuestionClick }) => {
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(null);
 
   const handleQuestionClick = (index) => {
     setSelectedQuestionIndex(index);
     onQuestionClick(index);
   };
-
+  //console.log(questions);
   return (
     <div className="w-1/2  p-4 bg-gray-900 rounded text-white overflow-y-auto">
+      {/* <h2 className="text-lg font-bold mb-4">
+        Question List - Text Field Type :{" "}
+      </h2> */}
       <ul>
         {questions.map((question, index) => {
           // Check if 'response' is an array, if yes, skip rendering this question
-          if (Array.isArray(question.response)) {
+          if (Array.isArray(question.response) === false) {
             return null;
           }
           return (
@@ -48,4 +51,4 @@ const QuestionList = ({ questions, onQuestionClick }) => {
   );
 };
 
-export default QuestionList;
+export default TextQuesList;
