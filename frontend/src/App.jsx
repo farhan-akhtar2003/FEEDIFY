@@ -16,9 +16,9 @@ import { UserContext } from "../context/userContext";
 import AdminHome from "../src/pages/Admin/Home";
 import FacultyHome from "../src/pages/Faculty/Home";
 import StudentHome from "../src/pages/Student/Home";
-import StudentForms from "./components/Student/Forms.jsx";
 import Analysis from "./pages/Faculty/Analysis.jsx";
-import HuggingFaceComponent from "./pages/hugg.jsx";
+import StudentForms from "./components/Student/Forms.jsx";
+import FacultyForms from "./components/Faculty/Forms.jsx";
 
 axios.defaults.baseURL = "http://localhost:8000";
 axios.defaults.withCredentials = true;
@@ -34,7 +34,6 @@ function App() {
         <Toaster position="top-center" toastOptions={{ duration: 2000 }} />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/query" element={<HuggingFaceComponent/>}/>
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           {user && user.user.userType === "Admin" && (
@@ -48,6 +47,7 @@ function App() {
           {user && user.user.userType === "Faculty" && (
             <>
               <Route path="/facultyhome" element={<FacultyHome />} />
+              <Route path="/forms" element={<FacultyForms />} />
               <Route path="/analysis/:id" element={<Analysis />} />
             </>
           )}
