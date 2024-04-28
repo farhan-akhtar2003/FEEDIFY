@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AddFieldModal from "../../components/Admin/AddFieldModal";
 import RenderPlainForm from "../../components/Admin/RenderPlainForm";
 import { updateObjState } from "../../utils";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import SelectStudentModal from "../../components/Admin/SelectStudentModal";
+import SelectFacultyModal from "../../components/Admin/SelectFacultyModal";
 
 function Create() {
   const [showAddModal, setShowAddModal] = useState(false);
@@ -12,6 +14,36 @@ function Create() {
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [studentslist, setStudentslist] = useState([]);
+  const [facultylist, setFacultylist] = useState([]);
+  const [selectedStudents, setSelectedStudents] = useState([]);
+  const [selectedFaculty, setSelectedFaculty] = useState(null);
+  const [showStudentModal, setShowStudentModal] = useState(false);
+  const [showFacultyModal, setShowFacultyModal] = useState(false);
+
+  useEffect(() => {
+    const fetchStudents = async () => {
+      try {
+        const response = await axios.get("/students");
+        setStudentslist(response.data);
+      } catch (error) {
+        console.error("Error fetching students:", error);
+      }
+    };
+    fetchStudents();
+  }, []);
+
+  useEffect(() => {
+    const fetchFaculty = async () => {
+      try {
+        const response = await axios.get("/faculties");
+        setFacultylist(response.data);
+      } catch (error) {
+        console.error("Error fetching faculties:", error);
+      }
+    };
+    fetchFaculty();
+  }, []);
 
   const openAddModal = (inputType) => {
     setShowAddModal(true);
@@ -24,14 +56,13 @@ function Create() {
     endMessage: "",
     expiration: "",
     fields: [],
-    // faculty:"",
-    // accessibleTo:[""],
+    faculty:"",
+    accessibleTo:[],
     createdAt: +new Date(),
   });
 
   const addFieldToFormModel = (field) => {
     let _model = { ...formModel }; // Using spread operator for shallow copy
-    // Assign a questionId based on the count of fields
     // field.questionId = formModel.fields.length + 1;
     _model.fields.push(field);
     setFormModel(_model);
@@ -69,8 +100,8 @@ function Create() {
         endMessage,
         expiration,
         fields,
-        // faculty,
-        // accessibleTo,
+        faculty: selectedFaculty,
+        accessibleTo: selectedStudents,
         createdAt,
       });
       const { data } = response; // Destructure the response object to extract data
@@ -83,22 +114,14 @@ function Create() {
           title: "",
           endMessage: "",
           expiration: "",
-          fields: [
-            // {
-            //   questionId: "",
-            //   title: "",
-            //   type: "",
-            //   required: true,
-            // },
-          ],
-          // faculty: "",
-          // accessibleTo: "",
+          fields: [],
+          faculty: "",
+          accessibleTo: [],
           createdAt: "",
         });
         toast.success("Form created Successfully!!!");
         setLoading(false);
         // Redirect to the desired route after form creation
-        //window.location.href = "/forms";
         navigate("/forms");
       }
     } catch (error) {
@@ -108,15 +131,25 @@ function Create() {
       toast.error("Internal Server Error. Please try again later.");
     }
   };
-  //console.log("FORMMODAL",formModel);
+
+  const handleOpenStudentModal = () => {
+    setShowStudentModal(true);
+  };
+
+  const handleOpenFacultyModal = () => {
+    setShowFacultyModal(true);
+  };
+  // console.log("student", studentslist);
+  // console.log("faculty", facultylist);
+
   return (
     <div className="container mx-auto bg-n-6 pt-10 pb-10">
-      <h1 className="text-3xl text-black font-semibold pt-20 mb-6">
+      <h1 className="text-3xl text-black font-semibold pt-20 mb-6 flex justify-center">
         Create New Form
       </h1>
       <div className="space-y-6">
         <div className="flex flex-col">
-          <label className="mb-1 text-gray-800">Title of the Form</label>
+          <label className="mb-1 text-gray-800">Form Title</label>
           <input
             type="text"
             placeholder="Enter title"
@@ -130,10 +163,10 @@ function Create() {
         {formModel.fields.length > 0 && <RenderPlainForm model={formModel} />}
 
         <div className="flex flex-col">
-          <label className="mb-1 text-gray-800">End Message</label>
+          <label className="mb-1 text-gray-800">Form Description</label>
           <input
             type="text"
-            placeholder="What should user see after submitting the form"
+            placeholder="Write description for the form"
             className="w-full border border-black rounded px-4 py-2 text-gray-800"
             onChange={(e) =>
               updateObjState(
@@ -170,45 +203,100 @@ function Create() {
 
         {err && <p className="text-red-500">{err}</p>}
 
-        <div className="flex justify-center">
-          <button
-            className="btn py-2 px-4 bg-n-4 text-black rounded hover:bg-green-600"
-            onClick={createForm}
-          >
-            {loading ? "Creating Form..." : "Create Form"}
-          </button>
-        </div>
-      </div>
+        <div className="flex flex-col items-center">
+          <div className="rounded mt-6 bg-n-3 py-10 mb-5">
+            <p className="text-3xl pl-5 py-1 bg-n-2 text-black">
+              Add Questions:
+            </p>
+            <p className="text-1.5xl  pl-5 my-2 text-black">
+              Choose the question fields:
+            </p>
+            <div className="grid grid-cols-2 py-4 bg-n-2 md:grid-cols-3 lg:grid-cols-3 gap-2 px-4">
+              {inputTypes.map((inputType, index) => (
+                <button
+                  className="btn py-2 px-4 bg-n-4 text-gray-800 rounded hover:bg-[#1d2951]"
+                  key={index}
+                  onClick={() => openAddModal(inputType)}
+                >
+                  {inputType.replace("-", " ")}
+                </button>
+              ))}
+            </div>
+          </div>
 
-      <div className="flex flex-col items-center">
-        <div className="rounded mt-6 bg-n-3 py-10 mb-5">
-          <p className="text-3xl pl-5 my-0.5 bg-n-2 text-black">
-            Add new Questions:
-          </p>
-          <p className="text-1.5xl  pl-5 mb-0.5 text-black">
-            Select the question fields:
-          </p>
-          <div className="grid grid-cols-2 py-4 bg-n-2 md:grid-cols-3 lg:grid-cols-3 gap-2 px-4">
-            {inputTypes.map((inputType, index) => (
+          {showAddModal && (
+            <AddFieldModal
+              inputType={inputType}
+              close={() => setShowAddModal(false)}
+              add={addFieldToFormModel}
+            />
+          )}
+
+          <div className="flex justify-between items-center">
+            {/* Buttons for selecting students and faculty */}
+            <div>
               <button
-                className="btn py-2 px-4 bg-n-4 text-gray-800 rounded hover:bg-[#1d2951]"
-                key={index}
-                onClick={() => openAddModal(inputType)}
+                className="bg-red-600 py-3 px-4 text-white rounded hover:bg-red-800"
+                onClick={handleOpenStudentModal}
               >
-                {inputType.replace("-", " ")}
+                Choose Students
               </button>
-            ))}
+              <button
+                className="bg-red-600 py-3 px-4 text-white rounded hover:bg-red-800 ml-2"
+                onClick={handleOpenFacultyModal}
+              >
+                Select Faculty
+              </button>
+            </div>
+            {/* Render the list of selected students */}
+            {/* <div>
+            <h2>Selected Students:</h2>
+            <ul>
+              {selectedStudents.map((studentId) => (
+                <li key={studentId}>{studentId}</li>
+              ))}
+            </ul>
+          </div> */}
+
+            {/* Render the selected faculty */}
+            {/* {selectedFaculty && (
+            <div>
+              <h2>Selected Faculty:</h2>
+              <p>{selectedFaculty}</p>
+            </div>
+          )} */}
+            {/* Button for creating the form */}
+            <button
+              className="btn ml-5 bg-n-4 text-black rounded hover:bg-green-600"
+              onClick={createForm}
+            >
+              {loading ? "Creating Form..." : "Create Form"}
+            </button>
           </div>
         </div>
-
-        {showAddModal && (
-          <AddFieldModal
-            inputType={inputType}
-            close={() => setShowAddModal(false)}
-            add={addFieldToFormModel}
-          />
-        )}
       </div>
+
+      {/* Student Selection Modal */}
+      {showStudentModal && (
+        <SelectStudentModal
+          isOpen={showStudentModal}
+          onClose={() => setShowStudentModal(false)}
+          students={studentslist}
+          selectedStudents={selectedStudents}
+          setSelectedStudents={setSelectedStudents}
+        />
+      )}
+
+      {/* Faculty Selection Modal */}
+      {showFacultyModal && (
+        <SelectFacultyModal
+          isOpen={showFacultyModal}
+          onClose={() => setShowFacultyModal(false)}
+          faculties={facultylist}
+          selectedFaculty={selectedFaculty}
+          setSelectedFaculty={setSelectedFaculty}
+        />
+      )}
     </div>
   );
 }

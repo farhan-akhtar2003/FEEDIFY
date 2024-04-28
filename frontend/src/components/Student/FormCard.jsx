@@ -24,22 +24,24 @@ function FormCard({ form }) {
             Submissions
           </Link>
         </div>
+
+        <div className="flex  items-center py-4">
+          <Link
+            className="text-black bg-green-500 focus:outline-none rounded-lg p-2 transition duration-300  hover:bg-green-800 hover:text-white "
+            // onClick={() =>
+            //   window.open(
+            //     `${window.location.origin}/fill/${form.formId}`,
+            //     "_blank"
+            //   )
+            // }
+            to={`/fill/${form.formId}`}
+          >
+            Fill Form
+          </Link>
+        </div>
         <p className="text-gray-800 m-2">
           Created on: {getDateFromMillis(form.createdAt)}
         </p>
-        <div className="flex justify-center items-center p-4">
-          <button
-            className="text-black bg-green-500 focus:outline-none rounded-lg p-2 transition duration-300  hover:bg-green-800 hover:text-white "
-            onClick={() =>
-              window.open(
-                `${window.location.origin}/fill/${form.formId}`,
-                "_blank"
-              )
-            }
-          >
-            Fill Form
-          </button>
-        </div>
       </div>
       {preview && (
         <div

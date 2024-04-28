@@ -32,7 +32,6 @@ const Login = () => {
     try {
       const response = await axios.post("/login", { email, password });
       const responseData = response.data;
-      //console.log(response.data); // Add this line
 
       if (responseData.error) {
         toast.error(responseData.error);
@@ -40,6 +39,7 @@ const Login = () => {
         setData({ email: "", password: "" }); // Reset the form
         toast.success("LOGGED IN SUCCESSFULLY !!!");
         toast.success("RELOAD IF DASHBOARD NOT SHOWN");
+
         // Redirect based on userType or default route
         const userType = responseData.type;
         switch (userType) {
@@ -58,11 +58,12 @@ const Login = () => {
         }
       }
     } catch (error) {
-      //toast.error("An error occurred while logging in.");
       console.error("Login error:", error);
+      // Optionally, handle the error here
     }
   };
 
+  //useeffect to
   return (
     <div className="flex items-center justify-center h-screen bg-white bg-[radial-gradient(#e5e7eb_3px,transparent_1px)] [background-size:36px_36px] overflow-y-auto">
       <div className="mx-auto font-poppins rounded-xl shadow-lg flex flex-col lg:flex-row md:flex-row w-3/4 md:w-2/3">
@@ -82,8 +83,8 @@ const Login = () => {
         </div>
 
         <div className="bg-n-1 flex flex-col justify-center items-center md:rounded-r-xl md:rounded-l-none rounded-b-xl shadow-lg md:w-[50%] p-[10%] md:p-[40px]">
-          <div className="text-center mb-4">
-            <p className="text-n-5 font-bold text-xl">
+          <div className="text-center mb-2">
+            <p className="text-gray-800 font-bold text-2xl">
               Sign in to continue to your dashboard.
             </p>
           </div>
@@ -91,7 +92,7 @@ const Login = () => {
             <div className="mb-4">
               <label
                 htmlFor="email"
-                className="block text-n-3 font-medium mb-2"
+                className="block text-black font-medium mb-1"
               >
                 Email
               </label>
@@ -108,7 +109,7 @@ const Login = () => {
             <div className="mb-4">
               <label
                 htmlFor="password"
-                className="block text-n-3 font-medium mb-2"
+                className="block text-black  font-medium mb-1"
               >
                 Password
               </label>
@@ -118,14 +119,14 @@ const Login = () => {
                 name="password"
                 onChange={handleChange}
                 value={data.password}
-                className="w-full border border-n-3 rounded-full px-4 py-2 focus:outline-none focus:border-n-4 text-n-5 text-base"
+                className="w-full border border-n-3 rounded-full px-4 py-2 focus:outline-none focus:border-n-4 text-n-5 text-base mb-1" 
                 required
               />
             </div>
             {error && <p className="text-red-600 mb-4">{error}</p>}
             <button
               type="submit"
-              className="w-full bg-n-4 text-white font-bold py-2 px-4 rounded-full hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+              className="w-full bg-n-4 flex justify-center text-white font-bold py-2  my-2 px-4 rounded-full hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
             >
               Sign In
             </button>

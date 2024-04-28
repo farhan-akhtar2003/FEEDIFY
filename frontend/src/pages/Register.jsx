@@ -1,3 +1,4 @@
+//FEEDIFY>FRONTEND>SRC>PAGES>REGISTER.JSX
 import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
@@ -67,9 +68,7 @@ const Register = () => {
 
         <div className="bg-n-1 flex flex-col justify-center items-center md:rounded-r-xl md:rounded-l-none rounded-b-xl shadow-lg md:w-[50%] p-[10%] md:p-[40px]">
           <div className="text-center mb-4">
-            <p className="text-n-5 font-bold text-xl">
-              Sign Up 
-            </p>
+            <p className="text-n-5 font-bold text-xl">Sign Up</p>
           </div>
           <form className="w-full" onSubmit={registerUser}>
             <div className="mb-4">
@@ -167,6 +166,7 @@ const Register = () => {
           </form>
         </div>
       </div>
+      //{" "}
     </div>
   );
 };

@@ -14,7 +14,7 @@ function Navbar() {
   useEffect(() => {
     if (user) {
       localStorage.setItem("token", JSON.stringify(user));
-      if (location.pathname === "/register" || location.pathname === "/login") {
+      if (location.pathname === "/login") {
         navigate("/");
       }
     } else {
@@ -65,12 +65,9 @@ function Navbar() {
         <Link to="/" className="flex items-center">
           <img src={logo} alt="Logo" className=" h-8 mr-2" />
         </Link>
-        {/* <Link to="/query" className="flex items-center">
-          hugging face
-        </Link> */}
-        <Link to="/forms" className="flex items-center">
+        {/* <Link to="/forms" className="flex items-center">
           All Forms
-        </Link>
+        </Link> */}
         <div className="flex items-center">
           {user ? (
             <>
@@ -113,12 +110,12 @@ function Navbar() {
               )}
               {user ? null : (
                 <>
-                  <Link
+                  {/* <Link
                     to="/register"
                     className="text-white mx-4 hover:text-yellow-400"
                   >
                     Register
-                  </Link>
+                  </Link> */}
                   <Link
                     to="/login"
                     className="text-white mx-4 hover:text-green-500"

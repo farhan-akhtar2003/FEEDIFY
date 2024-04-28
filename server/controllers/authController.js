@@ -147,26 +147,24 @@ const createForm = async (req, res) => {
       endMessage,
       expiration,
       fields,
-      //  faculty,
-      //  accessibleTo,
+      faculty,
+      accessibleTo,
       createdAt,
     } = req.body;
-
     const form = await Form.create({
       formId, // Include formId in the creation
       title,
       endMessage,
       expiration,
       fields,
-      // faculty,
-      // accessibleTo,
+      faculty,
+      accessibleTo,
       createdAt,
     });
     //console.log(form);
     res.status(201).json({ message: "Form created successfully", form });
   } catch (err) {
     console.error(err);
-    // Check if the error is a duplicate key error (E11000)
     if (err.code === 11000) {
       res.status(400).json({ error: "Duplicate formId detected" });
     } else {
@@ -178,13 +176,10 @@ const createForm = async (req, res) => {
 // Function to fetch forms
 // Use Form.find() to fetch all forms from the database.
 const getForms = async (req, res) => {
-  //console.log("nxsnxnsxsnaz");
   try {
     const allForms = await Form.find();
-    // console.log(allForms);
     const reversedForms = allForms.reverse();
 
-    // Send the response with the newly created form and all forms
     res.status(200).json({
       message: "Forms retrieved successfully",
       allForms: reversedForms,
@@ -200,7 +195,6 @@ const getForm = async (req, res) => {
   try {
     const { formId } = req.params; // Assuming formId is passed as a URL parameter
     const form = await Form.findOne({ formId });
-    //console.log("getsingleform",form);
     if (!form) {
       return res.status(404).json({ error: "Form not found" });
     }
@@ -212,10 +206,9 @@ const getForm = async (req, res) => {
 };
 
 // Function to delete a form
-// Function to delete a form
 const deleteForm = async (req, res) => {
   try {
-    const formId = req.params.formId; // Accessing the formId parameter from the request
+    const formId = req.params.formId;
 
     // Check if there are any submissions associated with the form
     const submissions = await Submission.find({ formID: formId });
@@ -442,16 +435,15 @@ const getAllcounts = async (req, res) => {
   }
 };
 
-
 //hugging face model
-const getNlp=async (req, res) => {
+const getNlp = async (req, res) => {
   const { inputs } = req.body;
   try {
     const response = await fetch(
       "https://api-inference.huggingface.co/models/facebook/bart-large-cnn",
       {
         headers: {
-          Authorization: "Bearer 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",// bearer token comes from hugging face
+          Authorization: "Bearer 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", // bearer token comes from hugging face
           "Content-Type": "application/json", // Add content type header
         },
         method: "POST",
@@ -468,6 +460,39 @@ const getNlp=async (req, res) => {
   }
 };
 
+// Function to get all students
+const allStudents = async (req, res) => {
+  try {
+    // Find all users with userType 'Student'
+    const students = await User.find({ userType: "Student" }).select(
+      "-password -_id"
+    );
+    // Return the list of students
+    res.status(200).json(students);
+  } catch (error) {
+    console.error("Error fetching students:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+// Function to get all Faculties,
+const allFaculties = async (req, res) => {
+  try {
+    // Find all users with userType 'Student'
+    const faculties = await User.find({ userType: "Faculty" }).select(
+      "-password -_id"
+    );
+    //console.log(faculties);
+    // Return the list of students
+    res.status(200).json(faculties);
+  } catch (error) {
+    console.error("Error fetching students:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+module.exports = allStudents;
+
 module.exports = {
   test,
   registerUser,
@@ -483,4 +508,6 @@ module.exports = {
   getAllsubmissions,
   getAllcounts,
   getNlp,
+  allStudents,
+  allFaculties,
 };

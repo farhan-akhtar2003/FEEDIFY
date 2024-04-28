@@ -56,7 +56,7 @@ function Submissions() {
             <span className="spinner"></span>
           </p>
         ) : msg ? (
-          <h3 className="msg mt-1 text-red-600">{msg}</h3>
+          <h3 className="flex justify-center mt-1 text-red-600 text-3xl">!! No Submissions yet !!</h3>
         ) : submissions.length > 0 ? (
           <div className="cards-container submissions">
             {submissions.map((submission, index) => (

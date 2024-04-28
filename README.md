@@ -44,3 +44,10 @@ npm install react-hot-toast
 ===> avoid using NLP SUMMARIZER for one word or short answer
  
 ```
+-- ** ADDED FACULTY, ACCESSIBLE TO  ETC
+
+   
+           
+
+    
+

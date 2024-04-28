@@ -24,7 +24,7 @@ function Submissions() {
         });
         if (isMounted) {
           // Check if component is still mounted before updating state
-          console.log("Submissions from API:", response.data);
+         // console.log("Submissions from API:", response.data);
           // Assuming response.data is an array of submissions
           setSubmissions(response.data); // Directly set the submissions array
           setLoading(false);
@@ -43,7 +43,7 @@ function Submissions() {
 
 
   useEffect(() => {
-    console.log("State submissions after setting:", submissions);
+    //console.log("State submissions after setting:", submissions);
   }, [submissions]); // Log the state after it has been updated
 
   return (
@@ -64,7 +64,7 @@ function Submissions() {
             <span className="spinner"></span>
           </p>
         ) : msg ? (
-          <h3 className="msg mt-1 text-red-600">{msg}</h3>
+          <h3 className="flex justify-center text-3xl mt-1 text-gray-900">` You haven't filled form Yet `</h3>
         ) : submissions.length > 0 ? (
           <div className="cards-container submissions">
             {submissions.map((subm, index) => (

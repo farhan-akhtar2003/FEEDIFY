@@ -7,12 +7,10 @@ const generateRandomString = () => {
   return crypto.randomBytes(16).toString("hex");
 };
 
-
 const formSchema = new mongoose.Schema({
   formId: {
     type: String,
     default: function () {
-      // Generate a unique identifier using timestamp and random string
       return Date.now().toString(36) + generateRandomString();
     },
     unique: true,
@@ -28,7 +26,6 @@ const formSchema = new mongoose.Schema({
       questionId: {
         type: String,
         default: function () {
-          // Generate a unique identifier using timestamp and random string
           return Date.now().toString(36) + generateRandomString();
         },
         unique: true,
@@ -46,16 +43,15 @@ const formSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
       },
-      // options: [String], // Add an options field for multiple option questions
     },
   ],
   faculty: {
     type: String,
-    default: null, // Set default value to null
+    default: null,
   },
   accessibleTo: {
-    type: [String], // Define as an array of strings
-    default: [], // Set default value to an empty array
+    type: [String],
+    default: [],
   },
   createdAt: {
     type: Date,
@@ -63,9 +59,7 @@ const formSchema = new mongoose.Schema({
   },
 });
 
-
 formSchema.index({ formId: 1 });
-
 
 const Form = mongoose.model("Form", formSchema);
 

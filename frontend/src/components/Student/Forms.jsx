@@ -37,13 +37,13 @@ function Forms() {
           <span className="spinner"></span>
         </p>
       ) : msg ? (
-        <h3 className="msg mt-1">{msg}</h3>
+        <h3 className="text-3xl text-gray-950 flex justify-center mt-1">Nothing to show</h3>
       ) : (
         <div className="cards-container">
           {forms.length > 0 ? (
             forms.map((form) => <FormCard key={form.formId} form={form} />)
           ) : (
-            <h3 className="msg mt-1">You haven't created any forms yet</h3>
+            <h3 className="msg mt-1">Nothing to show</h3>
           )}
         </div>
       )}

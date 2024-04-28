@@ -17,13 +17,15 @@ const {
   getAllsubmissions,
   getAllcounts,
   getNlp,
+  allStudents,
+  allFaculties,
 } = require("../controllers/authController");
 
 // Middleware for CORS
 router.use(
   cors({
     credentials: true,
-    origin: "http://localhost:5173",// NEED CHANGES 
+    origin: "http://localhost:5173", // NEED CHANGES
   })
 );
 
@@ -45,12 +47,20 @@ router.post("/forms/fill/:formId/submissions", submitForm); // Route for submitt
 
 router.get("/forms/submissions/:formId", getOnesubmissions);
 
-router.get("/forms/submission/:formId",getAllsubmissions);
+router.get("/forms/submission/:formId", getAllsubmissions);
 
 //for analysis
 router.get("/forms/analysis/:formId", getAllcounts);
 
 //for huggg
 router.post("/nlp", getNlp);
+
+//to get all students
+router.get("/students", allStudents);
+
+
+
+//to get all students
+router.get("/faculties", allFaculties);
 
 module.exports = router;

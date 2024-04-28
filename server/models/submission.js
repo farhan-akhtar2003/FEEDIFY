@@ -23,16 +23,16 @@ const AnswerSchema = new mongoose.Schema({
 // Define schema for a single response
 const ResponseSchema = new mongoose.Schema({
   studentID: {
-    type: String, // Changed to String type
+    type: String,
     required: true,
   },
-  answers: [AnswerSchema], // Array of answers
+  answers: [AnswerSchema],
 });
 
 // Define schema for the submission model
 const SubmissionSchema = new mongoose.Schema({
   formID: {
-    type: String, // Changed to String type
+    type: String,
     required: true,
   },
   formTitle: { type: String, required: true },
@@ -40,10 +40,9 @@ const SubmissionSchema = new mongoose.Schema({
     type: String,
     default: null,
   },
-  responses: [ResponseSchema], // Array of responses
+  responses: [ResponseSchema],
 });
 
-// Define and export the Submission model
 const Submission = mongoose.model("Submission", SubmissionSchema);
 
 module.exports = Submission;
