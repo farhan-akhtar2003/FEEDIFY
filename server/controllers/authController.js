@@ -435,12 +435,14 @@ const getAllcounts = async (req, res) => {
   }
 };
 
-//hugging face model
+//hugging face model for summarization
 const getNlp = async (req, res) => {
   const { inputs } = req.body;
   try {
     const response = await fetch(
       "https://api-inference.huggingface.co/models/facebook/bart-large-cnn",
+      // "https://api-inference.huggingface.co/models/philschmid/bart-large-cnn-samsum",
+
       {
         headers: {
           Authorization: "Bearer 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", // bearer token comes from hugging face
@@ -450,9 +452,34 @@ const getNlp = async (req, res) => {
         body: JSON.stringify({ inputs }),
       }
     );
-    // console.log("2");
     const result = await response.json();
     // console.log("3",result);
+    res.json(result);
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+//hugging face model for sentiment analysis
+const getSentiment = async (req, res) => {
+  const { inputs } = req.body;
+  try {
+    const response = await fetch(
+      // "https://api-inference.huggingface.co/models/avichr/heBERT_sentiment_analysis",
+      "https://api-inference.huggingface.co/models/cardiffnlp/twitter-roberta-base-sentiment-latest",
+
+      {
+        headers: {
+          Authorization: "Bearer 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",
+        },
+        method: "POST",
+        body: JSON.stringify({ inputs }),
+      }
+    );
+    // console.log("2");
+    const result = await response.json();
+    //console.log("3", result);
     res.json(result);
   } catch (error) {
     console.error("Error:", error);
@@ -508,6 +535,7 @@ module.exports = {
   getAllsubmissions,
   getAllcounts,
   getNlp,
+  getSentiment,
   allStudents,
   allFaculties,
 };

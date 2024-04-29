@@ -18,7 +18,6 @@ function Analysis() {
       try {
         const response = await axios.get(`/forms/analysis/${id}`);
         if (isMounted) {
-          //console.log("Submissions from API:", response.data);
           setAllanswer(response.data); // Directly set the submissions array
           setLoading(false);
         }
@@ -34,7 +33,6 @@ function Analysis() {
   }, [id, isMounted]);
 
   useEffect(() => {
-    //console.log("State submissions after setting:", allanswer);
   }, [allanswer]); // Log the state after it has been updated
 
   return (

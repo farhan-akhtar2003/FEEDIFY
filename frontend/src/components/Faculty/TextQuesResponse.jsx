@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import forwardIcon from "../../../public/Image/forwardIcon.png";
 import backwardIcon from "../../../public/Image/backwardIcon.png";
@@ -8,6 +8,7 @@ const TextQuesResponse = ({ selectedQuestion, data }) => {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
+  const [selectedNLP, setSelectedNLP] = useState(""); // State to store selected NLP task
 
   const handleNextResponse = () => {
     setCurrentResponseIndex((prevIndex) =>
@@ -23,8 +24,13 @@ const TextQuesResponse = ({ selectedQuestion, data }) => {
     setLoading(true);
     setError(null); // Reset error state
     try {
-      const response = await axios.post("/nlp", { inputs: inputText });
-      console.log(response.data);
+      let response;
+      if (selectedNLP === "summarizer") {
+        response = await axios.post("/nlpsummarizer", { inputs: inputText });
+      } else if (selectedNLP === "sentiment") {
+        response = await axios.post("/nlpsentiment", { inputs: inputText });
+      }
+      //console.log(response.data);
       setResult(response.data);
     } catch (error) {
       setError("An error occurred while processing your request.");
@@ -33,7 +39,20 @@ const TextQuesResponse = ({ selectedQuestion, data }) => {
       setLoading(false);
     }
   };
+  useEffect(() => {
+    if (selectedNLP) {
+      handleSubmit(selectedQuestionData.response[currentResponseIndex]);
+    }
+  }, [selectedNLP]);
 
+  useEffect(() => {
+    setSelectedNLP("");
+  }, [currentResponseIndex]);
+
+  useEffect(() => {
+    setResult(null);
+  }, [currentResponseIndex]);
+  
   if (!selectedQuestion) {
     return (
       <p className="bg-n-6 text-black m-auto flex justify-center ">
@@ -79,21 +98,22 @@ const TextQuesResponse = ({ selectedQuestion, data }) => {
         >
           <img className="w-6 h-6" src={backwardIcon} alt="Backward Icon" />
         </button>
-        <button
-          className={` px-2 text-white py-1 rounded bg-red-500 hover:bg-red-700 ${
-            loading ? "cursor-not-allowed" : ""
-          }`}
-          onClick={() =>
-            handleSubmit(selectedQuestionData.response[currentResponseIndex])
-          }
-          disabled={loading}
-        >
-          {loading ? (
-            <span className="spinner white "></span>
-          ) : (
-            <span>Use NLP Summarizer</span>
-          )}
-        </button>
+
+        {/* Dropdown menu for selecting NLP task */}
+        {loading ? (
+          <span className="spinner red"></span>
+        ) : (
+          <select
+            className="px-2 text-white  text-center py-1 rounded bg-red-500 hover:bg-red-700"
+            value={selectedNLP}
+            onChange={(e) => setSelectedNLP(e.target.value)}
+          >
+            <option value="">Select NLP Task</option>
+            <option value="summarizer">NLP Summarizer</option>
+            <option value="sentiment">NLP Sentiment Analysis</option>
+          </select>
+        )}
+
         <button
           className={`w-auto bg-transparent rounded-full hover:bg-blue-100 ${
             currentResponseIndex === totalResponses - 1
@@ -106,12 +126,43 @@ const TextQuesResponse = ({ selectedQuestion, data }) => {
           <img className="w-6 h-6" src={forwardIcon} alt="Forward Icon" />
         </button>
       </div>
-      {error && <p className="text-red-500 mt-2">{error}</p>}{" "}
       {/* <h2 className="text-gray-800 pt-1">Summarized:</h2> */}
       {/* Display error message */}
-      {result && (
-        <div className="pb-5  bg-gray-200 text-gray-800 rounded mt-2">
-          <p className="text-red-600 pl-1">{JSON.stringify(result, null, 2)}</p>
+      {error && <p className="text-red-500 mt-2">{error}</p>}
+
+      {result && result[0] && result[0].summary_text && (
+        <div className="p-5 bg-slate-200 text-[#78184a] rounded mt-2">
+          <p>{JSON.stringify(result, null, 2)}</p>
+        </div>
+      )}
+
+      {result && result[0] && result[0].length > 0 && (
+        <div className="bg-slate-200 text-black  rounded mt-2">
+          {result[0].map((sentiment) => (
+            <div
+              key={sentiment.label}
+              className="flex items-center py-2 mx-2 my-2"
+            >
+              <p className="mr-2 text-0.5xl ">{sentiment.label}</p>
+
+              <div
+                className={`h-4 mr-2 ml-2 ${
+                  sentiment.label === "positive"
+                    ? "bg-green-600"
+                    : sentiment.label === "negative"
+                    ? "bg-red-600"
+                    : "bg-gray-600"
+                } rounded`}
+                style={{
+                  width: `${sentiment.score * 100}%`, // score is between 0 and 1
+                }}
+              ></div>
+
+              {typeof sentiment.score === "number" && (
+                <p className="ml-2">{(sentiment.score * 100).toFixed(2)}%</p>
+              )}
+            </div>
+          ))}
         </div>
       )}
     </div>

@@ -17,6 +17,7 @@ const {
   getAllsubmissions,
   getAllcounts,
   getNlp,
+  getSentiment,
   allStudents,
   allFaculties,
 } = require("../controllers/authController");
@@ -52,13 +53,12 @@ router.get("/forms/submission/:formId", getAllsubmissions);
 //for analysis
 router.get("/forms/analysis/:formId", getAllcounts);
 
-//for huggg
-router.post("/nlp", getNlp);
+//for huggging face model
+router.post("/nlpsummarizer", getNlp);
+router.post("/nlpsentiment", getSentiment);
 
 //to get all students
 router.get("/students", allStudents);
-
-
 
 //to get all students
 router.get("/faculties", allFaculties);
