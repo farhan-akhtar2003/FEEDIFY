@@ -46,9 +46,3 @@ npm install react-hot-toast
 ```
 -- ** ADDED FACULTY, ACCESSIBLE TO  ETC
 -- ** ADDED NLP SENTIMENT ANALYSIS 
-
-   
-           
-
-    
-
